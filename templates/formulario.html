@@ -10,15 +10,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0e0e12;
-      --surface:   #16161e;
-      --border:    #2a2a38;
-      --accent:    #c8a96e;
-      --accent-lt: #e2c998;
-      --text:      #e8e8f0;
-      --muted:     #7a7a9a;
-      --error:     #e07070;
-      --success:   #6ecba8;
+      --bg:        #F2EBE3;
+      --surface:   #FFFFFF;
+      --border:    #C9B39B;
+      --accent:    #1E2A3A;
+      --accent-lt: #5C7893;
+      --text:      #1E2A3A;
+      --muted:     #7B8C9C;
+      --error:     #D35D5D;
+      --success:   #49A078;
       --radius:    10px;
     }
 
@@ -33,7 +33,6 @@
       padding: 48px 16px;
     }
 
-    /* ── header ── */
     .gem-icon {
       width: 52px; height: 52px;
       margin-bottom: 16px;
@@ -58,7 +57,6 @@
       margin-bottom: 36px;
     }
 
-    /* ── card ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -66,6 +64,7 @@
       padding: 36px 32px;
       width: 100%;
       max-width: 460px;
+      box-shadow: 0 10px 30px rgba(30, 42, 58, 0.05);
     }
 
     .section-label {
@@ -90,7 +89,7 @@
     input[type="number"],
     select {
       width: 100%;
-      background: var(--bg);
+      background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 6px;
       color: var(--text);
@@ -107,7 +106,7 @@
     select:focus { border-color: var(--accent); }
 
     select {
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a7a9a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237B8C9C' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 14px center;
       padding-right: 36px;
@@ -131,7 +130,7 @@
     button {
       width: 100%;
       background: var(--accent);
-      color: #0e0e12;
+      color: var(--bg);
       font-family: 'Inter', sans-serif;
       font-size: 0.9rem;
       font-weight: 600;
@@ -146,7 +145,6 @@
     button:hover { background: var(--accent-lt); }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    /* ── resultado ── */
     #resultado {
       margin-top: 20px;
       border-radius: 6px;
@@ -157,14 +155,14 @@
     }
 
     #resultado.success {
-      background: rgba(110, 203, 168, 0.1);
-      border: 1px solid rgba(110, 203, 168, 0.3);
+      background: rgba(73, 160, 120, 0.1);
+      border: 1px solid rgba(73, 160, 120, 0.3);
       color: var(--success);
     }
 
     #resultado.error {
-      background: rgba(224, 112, 112, 0.1);
-      border: 1px solid rgba(224, 112, 112, 0.3);
+      background: rgba(211, 93, 93, 0.1);
+      border: 1px solid rgba(211, 93, 93, 0.3);
       color: var(--error);
     }
 
@@ -173,10 +171,9 @@
       font-size: 1.8rem;
       display: block;
       margin-top: 4px;
-      color: var(--accent-lt);
+      color: var(--accent);
     }
 
-    /* ── footer ── */
     footer {
       margin-top: 32px;
       color: var(--muted);
@@ -187,13 +184,12 @@
 </head>
 <body>
 
-  <!-- gem SVG icon -->
   <svg class="gem-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="26,4 46,18 38,48 14,48 6,18" fill="none" stroke="#c8a96e" stroke-width="1.5"/>
-    <polygon points="26,4 46,18 26,22 6,18" fill="none" stroke="#c8a96e" stroke-width="1"/>
-    <polygon points="26,22 46,18 38,48" fill="none" stroke="#c8a96e" stroke-width="0.8" opacity="0.5"/>
-    <polygon points="26,22 6,18 14,48" fill="none" stroke="#c8a96e" stroke-width="0.8" opacity="0.5"/>
-    <line x1="26" y1="22" x2="26" y2="48" stroke="#c8a96e" stroke-width="0.6" opacity="0.4"/>
+    <polygon points="26,4 46,18 38,48 14,48 6,18" fill="none" stroke="var(--accent)" stroke-width="1.5"/>
+    <polygon points="26,4 46,18 26,22 6,18" fill="none" stroke="var(--accent)" stroke-width="1"/>
+    <polygon points="26,22 46,18 38,48" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.5"/>
+    <polygon points="26,22 6,18 14,48" fill="none" stroke="var(--accent)" stroke-width="0.8" opacity="0.5"/>
+    <line x1="26" y1="22" x2="26" y2="48" stroke="var(--accent)" stroke-width="0.6" opacity="0.4"/>
   </svg>
 
   <h1>Diamond Price Predictor</h1>
@@ -212,26 +208,26 @@
       <div class="field">
         <label for="color">Color</label>
         <select id="color" name="color" required>
-          <option value="D">D — sin color</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="G" selected>G</option>
-          <option value="H">H</option>
-          <option value="I">I</option>
-          <option value="J">J — amarillo tenue</option>
+          <option value="D">D — Incoloro perfecto (El más raro)</option>
+          <option value="E">E — Incoloro (Trazas imperceptibles)</option>
+          <option value="F">F — Incoloro (Alta calidad)</option>
+          <option value="G" selected>G — Casi incoloro (Excelente valor)</option>
+          <option value="H">H — Casi incoloro (Tinte muy ligero)</option>
+          <option value="I">I — Tinte amarillo muy leve</option>
+          <option value="J">J — Tinte amarillo leve visible</option>
         </select>
       </div>
       <div class="field">
-        <label for="clarity">Clarity (pureza)</label>
+        <label for="clarity">Pureza (Clarity)</label>
         <select id="clarity" name="clarity" required>
-          <option value="I1">I1 — inclusiones visibles</option>
-          <option value="SI2">SI2</option>
-          <option value="SI1" selected>SI1</option>
-          <option value="VS2">VS2</option>
-          <option value="VS1">VS1</option>
-          <option value="VVS2">VVS2</option>
-          <option value="VVS1">VVS1</option>
-          <option value="IF">IF — internamente perfecto</option>
+          <option value="IF">IF — Internamente perfecto (Sin defectos)</option>
+          <option value="VVS1">VVS1 — Inclusiones minúsculas (Casi perfect)</option>
+          <option value="VVS2">VVS2 — Inclusiones extremadamente sutiles</option>
+          <option value="VS1">VS1 — Inclusiones muy pequeñas</option>
+          <option value="VS2" selected>VS2 — Pequeñas inclusiones (Limpio a simple vista)</option>
+          <option value="SI1">SI1 — Inclusiones leves visibles bajo lupa</option>
+          <option value="SI2">SI2 — Inclusiones notables bajo lupa</option>
+          <option value="I1">I1 — Inclusiones visibles a simple vista</option>
         </select>
       </div>
     </div>
@@ -241,11 +237,11 @@
 
     <div class="row">
       <div class="field">
-        <label for="y">y — ancho</label>
+        <label for="y">y — Ancho (Width)</label>
         <input type="number" id="y" name="y" step="0.01" min="0" placeholder="ej. 5.75" required>
       </div>
       <div class="field">
-        <label for="z">z — profundidad</label>
+        <label for="z">z — Profundidad (Depth)</label>
         <input type="number" id="z" name="z" step="0.01" min="0" placeholder="ej. 3.53" required>
       </div>
     </div>
@@ -269,7 +265,7 @@
       const z       = document.getElementById('z').value.trim();
 
       if (!carat || !y || !z) {
-        mostrar('error', 'Completa todos los campos antes de estimar.');
+        mostrar('error', 'Completa todos los campos numéricos antes de estimar.');
         return;
       }
 
