@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diamond Price Predictor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0e0e12;
+      --surface:   #16161e;
+      --border:    #2a2a38;
+      --accent:    #c8a96e;
+      --accent-lt: #e2c998;
+      --text:      #e8e8f0;
+      --muted:     #7a7a9a;
+      --error:     #e07070;
+      --success:   #6ecba8;
+      --radius:    10px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 16px;
+    }
+
+    /* ── header ── */
+    .gem-icon {
+      width: 52px; height: 52px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      letter-spacing: 0.01em;
+      text-align: center;
+      background: linear-gradient(135deg, var(--accent-lt) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.85rem;
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    /* ── card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .field { margin-bottom: 20px; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    input[type="number"]:focus,
+    select:focus { border-color: var(--accent); }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a7a9a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .hint {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+
+    .row { display: flex; gap: 16px; }
+    .row .field { flex: 1; }
+
+    button {
+      width: 100%;
+      background: var(--accent);
+      color: #0e0e12;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      padding: 13px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      letter-spacing: 0.03em;
+    }
+
+    button:hover { background: var(--accent-lt); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── resultado ── */
+    #resultado {
+      margin-top: 20px;
+      border-radius: 6px;
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      display: none;
+      text-align: center;
+    }
+
+    #resultado.success {
+      background: rgba(110, 203, 168, 0.1);
+      border: 1px solid rgba(110, 203, 168, 0.3);
+      color: var(--success);
+    }
+
+    #resultado.error {
+      background: rgba(224, 112, 112, 0.1);
+      border: 1px solid rgba(224, 112, 112, 0.3);
+      color: var(--error);
+    }
+
+    .price-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      display: block;
+      margin-top: 4px;
+      color: var(--accent-lt);
+    }
+
+    /* ── footer ── */
+    footer {
+      margin-top: 32px;
+      color: var(--muted);
+      font-size: 0.72rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- gem SVG icon -->
+  <svg class="gem-icon" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="26,4 46,18 38,48 14,48 6,18" fill="none" stroke="#c8a96e" stroke-width="1.5"/>
+    <polygon points="26,4 46,18 26,22 6,18" fill="none" stroke="#c8a96e" stroke-width="1"/>
+    <polygon points="26,22 46,18 38,48" fill="none" stroke="#c8a96e" stroke-width="0.8" opacity="0.5"/>
+    <polygon points="26,22 6,18 14,48" fill="none" stroke="#c8a96e" stroke-width="0.8" opacity="0.5"/>
+    <line x1="26" y1="22" x2="26" y2="48" stroke="#c8a96e" stroke-width="0.6" opacity="0.4"/>
+  </svg>
+
+  <h1>Diamond Price Predictor</h1>
+  <p class="subtitle">Modelo Random Forest · Dataset Diamonds · Scikit-learn</p>
+
+  <div class="card">
+    <p class="section-label">Características del diamante</p>
+
+    <div class="field">
+      <label for="carat">Carat (peso en quilates)</label>
+      <input type="number" id="carat" name="carat" step="0.01" min="0.1" max="6" placeholder="ej. 0.89" required>
+      <p class="hint">Rango típico: 0.20 – 3.00</p>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="color">Color</label>
+        <select id="color" name="color" required>
+          <option value="D">D — sin color</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="G" selected>G</option>
+          <option value="H">H</option>
+          <option value="I">I</option>
+          <option value="J">J — amarillo tenue</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="clarity">Clarity (pureza)</label>
+        <select id="clarity" name="clarity" required>
+          <option value="I1">I1 — inclusiones visibles</option>
+          <option value="SI2">SI2</option>
+          <option value="SI1" selected>SI1</option>
+          <option value="VS2">VS2</option>
+          <option value="VS1">VS1</option>
+          <option value="VVS2">VVS2</option>
+          <option value="VVS1">VVS1</option>
+          <option value="IF">IF — internamente perfecto</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <p class="section-label">Dimensiones (mm)</p>
+
+    <div class="row">
+      <div class="field">
+        <label for="y">y — ancho</label>
+        <input type="number" id="y" name="y" step="0.01" min="0" placeholder="ej. 5.75" required>
+      </div>
+      <div class="field">
+        <label for="z">z — profundidad</label>
+        <input type="number" id="z" name="z" step="0.01" min="0" placeholder="ej. 3.53" required>
+      </div>
+    </div>
+
+    <button id="btn" type="button" onclick="predecirPrecio()">Estimar precio</button>
+
+    <div id="resultado"></div>
+  </div>
+
+  <footer>Random Forest · SelectFromModel (threshold=median) · K-Fold 7 pliegues</footer>
+
+  <script>
+    async function predecirPrecio() {
+      const btn = document.getElementById('btn');
+      const res = document.getElementById('resultado');
+
+      const carat   = document.getElementById('carat').value.trim();
+      const color   = document.getElementById('color').value;
+      const clarity = document.getElementById('clarity').value;
+      const y       = document.getElementById('y').value.trim();
+      const z       = document.getElementById('z').value.trim();
+
+      if (!carat || !y || !z) {
+        mostrar('error', 'Completa todos los campos antes de estimar.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Calculando…';
+      res.style.display = 'none';
+
+      const body = new URLSearchParams({ carat, color, clarity, y, z });
+
+      try {
+        const resp = await fetch('/predict', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body
+        });
+        const data = await resp.json();
+
+        if (data.error) {
+          mostrar('error', 'Error: ' + data.error);
+        } else {
+          const formatted = new Intl.NumberFormat('en-US', {
+            style: 'currency', currency: 'USD', maximumFractionDigits: 0
+          }).format(data.price);
+          mostrar('success', 'Precio estimado <span class="price-amount">' + formatted + '</span>');
+        }
+      } catch (_) {
+        mostrar('error', 'No se pudo conectar con el servidor.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Estimar precio';
+      }
+    }
+
+    function mostrar(tipo, html) {
+      const el = document.getElementById('resultado');
+      el.className = tipo;
+      el.innerHTML = html;
+      el.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
